@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3eb">
+  <title>BalacubacoLAB</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="/dashboard"><span class="brand-stamp">B</span><span>BalacubacoLAB</span></a>
+    <div class="server-state"><span class="state-dot"></span><span id="server-status">conectando</span></div>
+  </header>
+
+  <main>
+    <div class="board-toolbar">
+      <div class="toolbar-tools"><button id="select-tool" class="tool active"
+          title="Selecionar e mover">↖</button><button id="wire-tool" class="tool"
+          title="Arraste de uma peça até outra para criar fio">⤳</button><button id="arrow-tool" class="tool"
+          title="Desenhar anotação livre">↗</button><span class="tool-divider"></span><span
+          class="toolbar-title"><b></b><span>·</span><span id="tool-hint"></span></span></div>
+      <div class="zoom-tools"><button id="zoom-out" title="Diminuir zoom">−</button><span
+          id="zoom-label">100%</span><button id="zoom-in" title="Aumentar zoom">+</button><button id="zoom-fit"
+          title="Enquadrar o quadro inteiro">Ajustar</button></div><button id="delete-selection" class="restore-wires"
+        type="button">Apagar selecionado</button><button id="restore-wires" class="restore-wires"
+        type="button">Restaurar conexões</button><button id="reset-board" class="reset-board">↻ <span>Reiniciar
+          quadro</span></button>
+    </div>
+
+    <div class="workspace">
+      <aside class="object-shelf">
+        <div class="shelf-heading"><span>OBJETOS</span><span class="shelf-grip">•••</span></div>
+        <div class="object-group">
+          <h2>IDENTIDADES <small>03</small></h2>
+          <button class="object-card identity-object" data-drag-type="identity" data-id="1"
+            aria-label="Caio. Arraste para o cliente"><span class="object-grip">⠿</span><span
+              class="object-avatar avatar-caio">C</span><span class="object-name"><b>Caio</b><small>usuário ·
+                1</small></span><span class="object-kind">JWT</span></button>
+          <button class="object-card identity-object" data-drag-type="identity" data-id="2"
+            aria-label="João. Arraste para o cliente"><span class="object-grip">⠿</span><span
+              class="object-avatar avatar-joao">J</span><span class="object-name"><b>João</b><small>usuário ·
+                2</small></span><span class="object-kind">JWT</span></button>
+          <button class="object-card identity-object no-token-object" data-drag-type="identity" data-id="none"
+            aria-label="Sem token. Arraste para o cliente"><span class="object-grip">⠿</span><span
+              class="object-avatar avatar-none">×</span><span class="object-name"><b>Sem token</b><small>não
+                autenticado</small></span></button>
+        </div>
+        <div class="object-group profile-group">
+          <h2>PERFIS <small>03</small></h2>
+          <button class="object-card profile-object" data-drag-type="profile" data-id="1"
+            aria-label="Perfil do Caio. Arraste para a rota"><span class="object-grip">⠿</span><span
+              class="file-glyph">▤</span><span class="object-name"><b>Perfil do Caio</b><small>recurso · ID
+                1</small></span></button>
+          <button class="object-card profile-object" data-drag-type="profile" data-id="2"
+            aria-label="Perfil do João. Arraste para a rota"><span class="object-grip">⠿</span><span
+              class="file-glyph">▤</span><span class="object-name"><b>Perfil do João</b><small>recurso · ID
+                2</small></span></button>
+          <button class="object-card profile-object missing-object" data-drag-type="profile" data-id="9"
+            aria-label="Perfil inexistente. Arraste para a rota"><span class="object-grip">⠿</span><span
+              class="file-glyph">?</span><span class="object-name"><b>ID sem perfil</b><small>recurso · ID
+                9</small></span></button>
+        </div>
+        <div class="object-group rule-group">
+          <h2>REGRA <small>01</small></h2><button class="object-card policy-object" data-drag-type="policy"
+            aria-label="Regra de propriedade. Arraste para o controle de autorização"><span
+              class="object-grip">⠿</span><span class="rule-glyph">◇</span><span class="object-name"><b>Conferir
+                proprietário</b><small>autorização por objeto</small></span></button>
+        </div>
+        <div class="object-group component-group">
+          <h2>CONTAINERS <small>06</small></h2>
+          <button class="object-card" data-drag-type="component" data-id="client"><span
+              class="object-grip">⠿</span><span class="component-glyph">○</span><span
+              class="object-name"><b>Cliente</b><small>origem do pedido</small></span></button>
+          <button class="object-card" data-drag-type="component" data-id="authentication"><span
+              class="object-grip">⠿</span><span class="component-glyph">✓</span><span
+              class="object-name"><b>Autenticação</b><small>validar identidade</small></span></button>
+          <button class="object-card" data-drag-type="component" data-id="api"><span class="object-grip">⠿</span><span
+              class="component-glyph">⌘</span><span class="object-name"><b>API</b><small>rota ou
+                serviço</small></span></button>
+          <button class="object-card" data-drag-type="component" data-id="authorization"><span
+              class="object-grip">⠿</span><span class="component-glyph">◇</span><span
+              class="object-name"><b>Autorização</b><small>regra de acesso</small></span></button>
+          <button class="object-card" data-drag-type="component" data-id="database"><span
+              class="object-grip">⠿</span><span class="component-glyph">▤</span><span
+              class="object-name"><b>Dados</b><small>base ou recurso</small></span></button>
+          <button class="object-card" data-drag-type="component" data-id="response"><span
+              class="object-grip">⠿</span><span class="component-glyph">↩</span><span
+              class="object-name"><b>Resposta</b><small>status e retorno</small></span></button>
+        </div>
+        <div class="object-group free-group">
+          <h2>PEÇAS LIVRES <small>02</small></h2><button class="object-card free-object" data-drag-type="step"
+            aria-label="Bloco livre editável. Arraste para o quadro"><span class="object-grip">⠿</span><span
+              class="free-glyph">□</span><span class="object-name"><b>Nova etapa</b><small>bloco
+                editável</small></span></button><button class="object-card free-object" data-drag-type="note"
+            aria-label="Nota. Arraste para o quadro"><span class="object-grip">⠿</span><span
+              class="note-glyph">▤</span><span class="object-name"><b>Nota adesiva</b><small>texto
+                livre</small></span></button>
+        </div>
+      </aside>
+
+      <section class="canvas-area" aria-label="Quadro interativo SecurityLab">
+        <div id="flow-viewport" class="flow-viewport">
+          <div id="world-frame" class="world-frame">
+            <div id="flow-world" class="flow-world">
+              <svg class="wire-layer" viewBox="0 0 1400 590" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <marker id="arrow-head" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                    <path d="M0 0 L6 3 L0 6" fill="none" stroke="#555b52" stroke-width="1.3" />
+                  </marker>
+                </defs>
+                <path id="wire-client-auth" class="wire-main" marker-end="url(#arrow-head)" />
+                <path id="wire-auth-request" class="wire-main" marker-end="url(#arrow-head)" />
+                <path id="wire-request-gate" class="wire-main" marker-end="url(#arrow-head)" />
+                <path id="wire-gate-outcome" class="wire-main" marker-end="url(#arrow-head)" />
+                <path id="wire-response" class="wire-response" marker-end="url(#arrow-head)" />
+                <g id="wire-hit-layer"></g>
+                <g id="custom-arrows"></g>
+              </svg>
+
+              <div class="wire-label response-label">resposta da API</div>
+              <div class="board-packet" id="packet"><span>GET</span><i></i></div>
+
+              <article class="canvas-node client-node drop-zone" id="node-client" data-drop="identity">
+                <div class="node-caption"><span>CLIENTE</span><button type="button" class="move-grip"
+                    aria-label="Mover bloco Cliente" title="Segure para mover">⠿</button></div>
+                <div class="client-main"><span id="person-glyph" class="client-avatar">C</span>
+                  <div><b id="person-name">Caio</b><small id="person-id">usuário · 1</small></div>
+                </div>
+                <div id="client-token" class="client-token">Bearer token-caio</div>
+                <div class="drop-instruction">SOLTE IDENTIDADE AQUI</div>
+              </article>
+
+              <article class="canvas-node auth-node" id="node-auth">
+                <div class="node-caption"><span>AUTENTICAÇÃO</span><button type="button" class="move-grip"
+                    aria-label="Mover bloco Autenticação" title="Segure para mover">⠿</button></div>
+                <div class="node-symbol auth-symbol">✓</div><b id="auth-state">esperando pedido</b><small
+                  id="auth-detail">Quem está fazendo a chamada?</small>
+              </article>
+
+              <article class="canvas-node request-node drop-zone" id="node-record" data-drop="profile">
+                <div class="node-caption"><span>API · PERFIS</span><button type="button" class="move-grip"
+                    aria-label="Mover bloco API" title="Segure para mover">⠿</button></div>
+                <div class="request-line"><span class="request-verb"
+                    title="Método HTTP de leitura"><i></i><b>GET</b><small>LEITURA</small></span><code
+                    id="request-path">/api/users/:id</code><span class="request-protocol">HTTP</span></div>
+                <div class="request-headers" aria-label="Cabeçalhos enviados">
+                  <div class="request-headers-title">HEADERS <span id="request-header-count">2</span></div>
+                  <div id="request-auth-row" class="request-header"><span>Authorization</span><code
+                      id="request-auth">Bearer token-caio</code></div>
+                  <div class="request-header"><span>Accept</span><code>application/json</code></div>
+                </div>
+                <div class="request-result"><i></i><b id="record-state">rota pronta</b></div>
+                <small id="record-detail">Solte um perfil aqui para chamar a API.</small>
+                <div class="drop-instruction">SOLTE PERFIL PARA EXECUTAR</div>
+              </article>
+
+              <article class="canvas-node gate-node drop-zone" id="node-gate" data-drop="policy">
+                <div class="node-caption"><span>AUTORIZAÇÃO</span><button type="button" class="move-grip"
+                    aria-label="Mover bloco Autorização" title="Segure para mover">⠿</button><button id="policy-toggle"
+                    class="policy-toggle" type="button">ATIVA</button></div>
+                <div id="gate-icon" class="node-symbol gate-symbol">◇</div><b id="gate-state">proprietário?</b><small
+                  id="gate-detail">A API compara pessoa e perfil.</small>
+                <div class="drop-instruction">SOLTE REGRA OU CLIQUE PARA ALTERNAR</div>
+              </article>
+
+              <article class="canvas-node outcome-node" id="node-outcome">
+                <div class="node-caption"><span>RETORNO</span><button type="button" class="move-grip"
+                    aria-label="Mover bloco Retorno" title="Segure para mover">⠿</button><span id="outcome-code"
+                    class="outcome-code">—</span></div>
+                <div class="outcome-mark" id="outcome-mark">…</div><b id="outcome-state">sem resposta</b><small
+                  id="outcome-detail">A resposta real aparece aqui.</small>
+              </article>
+
+            </div>
+          </div>
+        </div>
+        <div class="canvas-footer"><span id="scene-caption">Comece escolhendo uma identidade na prateleira.</span><span
+            id="flow-connectivity" class="connection-status">verificando conexões…</span><span id="scene-request-id">sem
+            request ID</span><button id="pause-button" class="pause-button" type="button" title="Pausar a animação"
+            hidden><span id="pause-icon">Ⅱ</span><span id="pause-label">Pausar</span></button><button id="send-button"
+            class="play-button" type="button" title="Reproduz o fluxo conectado"><span class="play-icon">▶</span><span
+              id="play-label">Reproduzir fluxo</span></button></div>
+      </section>
+    </div>
+
+    <section class="cases-section">
+      <div class="cases-intro"><span class="eyebrow">PREPARAÇÃO</span>
+        <h2>Seus casos de teste</h2>
+        <p>Monte a combinação agora, rode quando quiser.</p>
+      </div>
+      <form id="case-form" class="case-form">
+        <label><span>NOME</span><input id="case-name" required maxlength="48"
+            placeholder="Ex.: Caio tenta abrir perfil do João"></label>
+        <label><span>IDENTIDADE</span><select id="case-user">
+            <option value="1">Caio · ID 1</option>
+            <option value="2">João · ID 2</option>
+            <option value="none">Sem token</option>
+          </select></label>
+        <label><span>PERFIL</span><select id="case-profile">
+            <option value="1">Caio · ID 1</option>
+            <option value="2" selected>João · ID 2</option>
+            <option value="9">Inexistente · ID 9</option>
+          </select></label>
+        <label><span>REGRA</span><select id="case-policy">
+            <option value="true">Verificar proprietário</option>
+            <option value="false">Ignorar checagem</option>
+          </select></label>
+        <button id="save-case" type="submit">Guardar caso <b>＋</b></button>
+      </form>
+      <div id="case-list" class="case-list">
+        <p class="empty-cases">Nenhum caso preparado. Os casos ficam salvos neste navegador.</p>
+      </div>
+    </section>
+
+    <section class="results-area">
+      <div class="response-panel">
+        <div class="panel-heading"><span class="panel-doodle">↙</span>
+          <div><span class="eyebrow">O QUE A API DEVOLVEU</span>
+            <h2 id="result-message">Aguardando uma execução.</h2><small id="result-meta">Nenhuma chamada foi
+              enviada.</small>
+          </div><span id="response-status" class="status-code">—</span>
+        </div>
+        <details class="raw-response">
+          <summary>Ver corpo JSON <span>⌄</span></summary>
+          <pre id="response-body">Aguardando resposta HTTP…</pre>
+        </details>
+      </div>
+      <div class="comparison-panel">
+        <div class="comparison-heading"><span class="eyebrow">FAZER LADO A LADO</span>
+          <h2>Uma tentativa<br><em>antes e depois.</em></h2>
+          <p>Dispara a mesma rota com a regra desligada e ligada.</p><button id="compare-button" type="button">Executar
+            A/B <span>↗</span></button>
+        </div>
+        <div id="comparison-results" class="comparison-results">
+          <div class="comparison-placeholder">Os dois resultados reais vão aparecer aqui.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="history-section">
+      <div class="history-heading">
+        <div><span class="eyebrow">REGISTRO LOCAL</span>
+          <h2>Execuções <span id="history-count">00</span></h2>
+        </div><button id="clear-history" disabled>Limpar</button>
+      </div>
+      <div class="history-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>HORÁRIO</th>
+              <th>REQUEST ID</th>
+              <th>QUEM</th>
+              <th>PERFIL</th>
+              <th>REGRA</th>
+              <th>HTTP</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr>
+              <td colspan="6" class="empty-history">As chamadas desta sessão aparecem aqui.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="visually-hidden" aria-hidden="true"><select id="auth-user">
+        <option value="1">Caio</option>
+        <option value="2">João</option>
+      </select><input id="target-id" value="2"><input id="no-auth" type="checkbox"><button
+        id="policy-off"></button><button id="policy-on"></button></div>
+  </main>
+  <script src="/vendor/gsap/gsap.min.js"></script>
+  <script src="/app.js" defer></script>
+</body>
+
+</html>

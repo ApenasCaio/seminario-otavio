@@ -1,0 +1,43 @@
+{
+  "info": {
+    "_postman_id": "e6196714-9491-4a62-a971-c9f1dd932006",
+    "name": "SecurityLab — uma rota, duas políticas",
+    "description": "Quatro cenários locais. Cada pasta aplica a política no backend e depois executa GET /api/users/:id, sempre na mesma rota.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:3000" },
+    { "key": "caioToken", "value": "token-caio" },
+    { "key": "joaoToken", "value": "token-joao" }
+  ],
+  "item": [
+    {
+      "name": "CT01 — Caio acessa o próprio perfil",
+      "item": [
+        { "name": "Preparar: autorização ativa", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"enforceAuthorization\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/lab/policy" } },
+        { "name": "CT01: GET /api/users/1", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{caioToken}}" }], "url": "{{baseUrl}}/api/users/1" }, "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('CT01 retorna 200', () => pm.response.to.have.status(200));", "pm.test('CT01 retorna o perfil de Caio', () => pm.expect(pm.response.json().data.id).to.eql(1));", "pm.test('a mesma rota executou a checagem', () => pm.expect(pm.response.json().trace.find(x => x.step === 'object authorization').state).to.eql('allowed'));" ] } }] }
+      ]
+    },
+    {
+      "name": "CT02 — Reproduzir acesso cruzado sem checagem",
+      "item": [
+        { "name": "Preparar: sem checagem de propriedade", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"enforceAuthorization\": false\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/lab/policy" } },
+        { "name": "CT02: GET /api/users/2", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{caioToken}}" }], "url": "{{baseUrl}}/api/users/2" }, "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('CT02 reproduz o acesso cruzado com HTTP 200', () => pm.response.to.have.status(200));", "pm.test('o perfil retornado é o de João', () => pm.expect(pm.response.json().data.id).to.eql(2));", "pm.test('o backend registrou a checagem como desativada', () => pm.expect(pm.response.json().trace.find(x => x.step === 'object authorization').state).to.eql('skipped'));" ] } }] }
+      ]
+    },
+    {
+      "name": "CT03 — Bloquear acesso cruzado com autorização ativa",
+      "item": [
+        { "name": "Preparar: autorização ativa", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"enforceAuthorization\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/lab/policy" } },
+        { "name": "CT03: GET /api/users/2", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{caioToken}}" }], "url": "{{baseUrl}}/api/users/2" }, "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('CT03 retorna 403', () => pm.response.to.have.status(403));", "pm.test('o backend registrou a autorização negada', () => pm.expect(pm.response.json().trace.find(x => x.step === 'object authorization').state).to.eql('denied'));", "pm.test('nenhum perfil foi incluído', () => pm.expect(pm.response.json().data).to.be.undefined);" ] } }] }
+      ]
+    },
+    {
+      "name": "CT04 — Rejeitar chamada sem token",
+      "item": [
+        { "name": "Preparar: autorização ativa", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"enforceAuthorization\": true\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/lab/policy" } },
+        { "name": "CT04: GET /api/users/1 sem Authorization", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/users/1" }, "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('CT04 retorna 401', () => pm.response.to.have.status(401));", "pm.test('a autenticação foi negada no backend', () => pm.expect(pm.response.json().trace[0].state).to.eql('failed'));" ] } }] }
+      ]
+    }
+  ]
+}
